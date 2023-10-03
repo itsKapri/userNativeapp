@@ -144,7 +144,7 @@ import MapView, { Marker, AnimatedRegion } from "react-native-maps";
 import axios from "axios";
 import img_logo from "../assets/edba.png";
 import greenIndicator from "../assets/greenIndicator.png";
-
+import { mapStyle } from "./style/mapstyle";
 const { height, width } = Dimensions.get("window");
 const screen = Dimensions.get("window");
 const ASPECT_RATIO = screen.width / screen.height;
@@ -166,6 +166,7 @@ const Map = (props) => {
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     }),
+    heading:0
   });
 
   const { curLoc, coordinate, isLoading } = state;
@@ -178,6 +179,8 @@ const Map = (props) => {
       if (response.status === 200) {
         let location = response.data[response.data.length - 1];
         const { latitude, longitude } = location.data;
+        const head=location.data.heading
+        console.log("heading----",head)
         animate(latitude, longitude);
         updateState({
           curLoc: { latitude, longitude },
@@ -246,7 +249,9 @@ const Map = (props) => {
             <View style={styles.container}>
               <MapView
                 ref={mapRef}
-                style={StyleSheet.absoluteFill}
+                // style={StyleSheet.absoluteFill}
+                style={styles.map}
+                // customMapStyle={mapStyle}
                 initialRegion={{
                   ...curLoc,
                   latitudeDelta: LATITUDE_DELTA,
@@ -256,7 +261,7 @@ const Map = (props) => {
                 <Marker.Animated coordinate={coordinate}>
                   <Image
                     source={require("../assets/bus-svgrepo-com.png")}
-                    style={{ height: 25, width: 25, borderRadius: 2 }}
+                    style={{ height: 45, width: 45, borderRadius: 1}}
                     resizeMode="contain"
                   />
                 </Marker.Animated>
@@ -292,10 +297,15 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
+  map:{
+    height:"100%",
+    width:"100%"
+  },
   container: {
-    height: 660,
-    width: 334,
+    height: 682,
+    width: 357,
     borderRadius: 5,
+    padding:0
   },
 });
 
